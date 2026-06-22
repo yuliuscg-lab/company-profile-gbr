@@ -1,4 +1,4 @@
-import { AppBar, Box, Button, Container, Toolbar, Typography } from "@mui/material";
+import { alpha, AppBar, Box, Button, Container, Toolbar, Typography } from "@mui/material";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../routes/routePaths";
 import logoImage from "../../../assets/logo-gembira/logo-gbr.png";
@@ -17,7 +17,7 @@ const NavBar=()=> {
     const navigate = useNavigate();
 
     return (
-        <AppBar position="fixed" sx={{bgcolor:'white', color:'text.primary', boxShadow:'none'}}>
+        <AppBar position="fixed" elevation={0} sx={{bgcolor: alpha('#ffffff', 0.75), color:'text.primary', boxShadow:'none', backdropFilter:'blur(16px)', WebkitBackdropFilter:'blur(16px)'}}>
             <Container maxWidth={false} sx={{px:4}}>
                 <Toolbar>
                     <Box 
