@@ -6,10 +6,10 @@ import logoImage from "../../../assets/logo-gembira/logo-gbr.png";
 
 
 const navItems = [
-    { label: 'Home', path:ROUTES.HOME},
-    { label: 'About', path:ROUTES.ABOUT},
-    { label: 'Products', path:ROUTES.PRODUCTS},
-    { label: 'Articles', path:ROUTES.ARTICLES}
+    { label: 'Beranda', path:ROUTES.HOME},
+    { label: 'Tentang Kami', path:ROUTES.ABOUT},
+    { label: 'Produk', path:ROUTES.PRODUCTS},
+    { label: 'Artikel', path:ROUTES.ARTICLES}
 ]
 
 const NavBar=()=> {

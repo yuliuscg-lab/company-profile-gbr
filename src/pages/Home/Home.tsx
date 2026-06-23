@@ -4,6 +4,8 @@ import ProductSummary from "./components/ProductSummary";
 import ProductData from "../../data/product.data";
 import TestimonialSummary from "./components/TestimonialSummary";
 import TestimonialData from "../../data/testimonial.data";
+import CallToAction from "./components/CallToAction";
+import Footer from "./components/Footer";
 
 const Home = () =>{
     return(
@@ -12,6 +14,8 @@ const Home = () =>{
             <AboutSummary/>
             <ProductSummary ProductDatas={ProductData}/>
             <TestimonialSummary testimoniData={TestimonialData}/>
+            <CallToAction/>
+            <Footer/>
         </>
     )
 };
