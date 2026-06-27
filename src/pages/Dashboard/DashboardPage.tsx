@@ -2,10 +2,10 @@ import { Box, Grid, Typography, Card, Chip } from '@mui/material'
 import { ArticleOutlined, GroupOutlined, VisibilityOutlined, TrendingUpOutlined } from '@mui/icons-material'
 
 const stats = [
-  { label: 'Total Artikel', value: '24', icon: <ArticleOutlined />, color: '#185FA5' },
-  { label: 'Total Pengguna', value: '8', icon: <GroupOutlined />, color: '#0EA5E9' },
-  { label: 'Total Kunjungan', value: '3.2K', icon: <VisibilityOutlined />, color: '#16A34A' },
-  { label: 'Pertumbuhan', value: '+12%', icon: <TrendingUpOutlined />, color: '#D97706' },
+  { label: 'Total Artikel', value: '', icon: <ArticleOutlined />, color: '#185FA5' },
+  { label: 'Total Pengguna', value: '', icon: <GroupOutlined />, color: '#0EA5E9' },
+  { label: 'Total Kunjungan', value: '', icon: <VisibilityOutlined />, color: '#16A34A' },
+  { label: 'Pertumbuhan', value: '', icon: <TrendingUpOutlined />, color: '#D97706' },
 ]
 
 const recentArticles = [

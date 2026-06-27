@@ -27,11 +27,30 @@ type Props = {
 	children: ReactNode;
 };
 
+const USER_CACHE_KEY = 'cms_user_cache';
+
 const AuthProvider = ({ children }: Props) => {
-	const [user, setUser] = useState<Backendless.User | null>(null);
-	const [isAuthenticating, setIsAuthenticating] = useState<boolean>(false);
+	const [user, setUser] = useState<Backendless.User | null>(()=> {
+		try {
+			const cached = localStorage.getItem(USER_CACHE_KEY);
+			return cached ? JSON.parse(cached):null;
+		} catch (error) {
+			console.error('Error: ', error);
+			return null;
+		}
+	});
+	const [isAuthenticating, setIsAuthenticating] = useState<boolean>(true);
 
 	const nav = useNavigate();
+
+	const persistUser = (u:Backendless.User | null) => {
+		setUser(u);
+		if(u) {
+			localStorage.setItem(USER_CACHE_KEY, JSON.stringify(u));
+		} else {
+			localStorage.removeItem(USER_CACHE_KEY);
+		}
+	};
 
 	const signIn = async (
 		email: string,
@@ -44,16 +63,16 @@ const AuthProvider = ({ children }: Props) => {
 			const authUser = await Backendless.UserService.login(
 				email,
 				password,
-				true, // Mengaktifkan stayLoggedIn / remember me
+				true,
 			);
+			persistUser(authUser);
 			console.log(authUser);
-			setUser(authUser);
 			onSuccess?.();
 			nav(ROUTES.CMSDASHBOARD);
 		} catch (error) {
 			onError?.();
 			console.error(error);
-			setUser(null);
+			persistUser(null);
 		} finally {
 			setIsAuthenticating(false);
 		}
@@ -62,7 +81,7 @@ const AuthProvider = ({ children }: Props) => {
 	const signOut = async () => {
 		try {
 			await Backendless.UserService.logout();
-			setUser(null);
+			persistUser(null);
 			nav(ROUTES.CMS);
 		} catch (error) {
 			console.error(error);
@@ -72,24 +91,23 @@ const AuthProvider = ({ children }: Props) => {
 	const refreshUser = async () => {
 		try {
 			const currentUser = await Backendless.UserService.getCurrentUser();
-			setUser(currentUser);
+			persistUser(currentUser)
 		} catch (error) {
 			console.error("Failed to refresh user:", error);
 		}
 	};
 
 	const checkAuth = async () => {
-		setIsAuthenticating(true);
 		try {
 			const isValid = await Backendless.UserService.isValidLogin();
 			if (isValid) {
 				await refreshUser();
 			} else {
-				setUser(null);
+				persistUser(null);
 			}
 		} catch (error) {
 			console.error("Failed to check auth:", error);
-			setUser(null);
+			persistUser(null);
 		} finally {
 			setIsAuthenticating(false);
 		}

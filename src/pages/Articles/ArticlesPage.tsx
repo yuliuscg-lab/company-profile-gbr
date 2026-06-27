@@ -1,8 +1,8 @@
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import {
   Box, Typography, Button, Card, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, IconButton, Chip, Dialog, DialogTitle, DialogContent,
-  DialogActions, TextField, MenuItem, Snackbar, Alert,
+  DialogActions, TextField, MenuItem, Snackbar, Alert, CircularProgress
 } from '@mui/material'
 import { AddOutlined, DeleteOutlineOutlined, EditOutlined } from '@mui/icons-material';
 import { useFormik } from 'formik';
@@ -36,150 +36,244 @@ import Link from '@tiptap/extension-link'
 import Image from '@tiptap/extension-image'
 import TextAlign from '@tiptap/extension-text-align'
 import Placeholder from '@tiptap/extension-placeholder'
+import backendlessApi from '../../config/axios.config';
+import { useAuth } from '../../context/AuthContext';
+import useFetch from '../../hooks/useFetch';
 
 const editorExtensions = [
-  StarterKit, // sudah termasuk: paragraph, heading, bold, italic, strike, bulletList, orderedList, blockquote, codeBlock, horizontalRule, history (undo/redo)
-  Underline, // bold/italic/strike dari StarterKit, underline harus ditambah manual
-  Link.configure({ openOnClick: false }), // supaya link tidak langsung ke-trigger saat sedang diedit
-  Image, // untuk sisipkan gambar di tengah artikel
-  TextAlign.configure({ types: ['heading', 'paragraph'] }), // rata kiri/tengah/kanan
+  StarterKit,
+  Underline,
+  Link.configure({ openOnClick: false }),
+  Image,
+  TextAlign.configure({ types: ['heading', 'paragraph'] }),
   Placeholder.configure({ placeholder: 'Tulis isi artikel di sini...' }),
 ]
 
 type Article = {
-  id: string
+  objectId: string;
   title: string
   category: string
-  status: 'Draft' | 'Published'
-  date: string
+  article_status: 'Draft' | 'Published'
+  content: string
+  created: number
 }
 
-// Data dummy awal — ganti dengan fetch dari API artikel Anda
-const initialArticles: Article[] = [
-  { id: '1', title: 'Tips Menulis Artikel SEO', category: 'Tips', status: 'Published', date: '24 Jun 2026' },
-  { id: '2', title: 'Panduan Onboarding Tim Baru', category: 'Internal', status: 'Draft', date: '22 Jun 2026' },
-  { id: '3', title: 'Update Fitur CMS Bulan Ini', category: 'Produk', status: 'Published', date: '18 Jun 2026' },
-]
-
 export default function ArticlesPage() {
-  const [articles, setArticles] = useState<Article[]>(initialArticles)
-  const [openForm, setOpenForm] = useState(false)
-  const [deleteTarget, setDeleteTarget] = useState<Article | null>(null)
-  const [snackbar, setSnackbar] = useState<string | null>(null)
+  const [openForm, setOpenForm] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<Article | null>(null);
+  const [snackbar, setSnackbar] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [editTarget, setEditTarget] = useState<Article|null>(null);
 
+  const {user} = useAuth();
+  const rteRef = useRef<RichTextEditorRef>(null);
+
+  // 1. Integrasi useFetch langsung untuk entitas /Articles
+  const {
+    data: articles,
+    isLoading,
+    error,
+    refetch: reloadArticles,
+  } = useFetch<Article[]>(
+    "/Articles",
+    {
+      params: {
+        where: `ownerId='${user?.objectId}'`,
+        sortBy: "created desc",
+      },
+    },
+    backendlessApi,
+  );
+
+  // 2. Formik Setup dengan penanganan ekstrak konten dari Rich Text Editor
   const formik = useFormik({
-    initialValues: { title: '', category: '', status: 'Draft', content: '' },
+    initialValues: { title: '', category: '', article_status: 'Draft', content: '' },
     validationSchema: Yup.object({
       title: Yup.string().min(5, 'Judul minimal 5 karakter').required('Judul wajib diisi'),
       category: Yup.string().required('Kategori wajib diisi'),
-      status: Yup.string().required(),
+      article_status: Yup.string().required(),
       content: Yup.string().min(20, 'Konten minimal 20 karakter').required('Konten wajib diisi'),
     }),
-    onSubmit: (values, { resetForm }) => {
-      // TODO: ganti dengan POST ke API artikel Anda
-      const newArticle: Article = {
-        id: Date.now().toString(),
-        title: values.title,
-        category: values.category,
-        status: values.status as Article['status'],
-        date: new Date().toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }),
-      }
-      setArticles((prev) => [newArticle, ...prev])
-      resetForm()
-      setOpenForm(false)
-      setSnackbar('Artikel berhasil ditambahkan')
-    },
-  })
 
-  const handleDelete = () => {
-    if (!deleteTarget) return
-    setArticles((prev) => prev.filter((a) => a.id !== deleteTarget.id))
-    setSnackbar('Artikel berhasil dihapus')
-    setDeleteTarget(null)
-  }
+    onSubmit: async (values) => {
+      try {
+        setIsSubmitting(true);
+        if (editTarget) {
+          await backendlessApi.put(`/Articles/${editTarget.objectId}`, {
+            title: values.title,
+            category: values.category,
+            status: values.article_status,
+            content: values.content,
+          });
+          setSnackbar({ message: 'Artikel berhasil diperbarui', severity: 'success' });
+        } else {
+          await backendlessApi.post('/Articles', {
+            title: values.title,
+            category: values.category,
+            status: values.article_status,
+            content: values.content,
+            ownerId: user?.objectId,
+          });
+          setSnackbar({ message: 'Artikel berhasil ditambahkan', severity: 'success' });
+        };
+        reloadArticles();
+        handleCloseForm();
+        } catch (err) {
+          console.error("Detail error:", err);
+          setSnackbar({ message: 'Proses gagal dilakukan', severity: 'error' });
+        } finally {
+          setIsSubmitting(false);
+        }
+      },
+  });
 
-  const rteRef = useRef<RichTextEditorRef>(null);
+  const handleCloseForm = () => {
+    setOpenForm(false);
+    setEditTarget(null); 
+    formik.resetForm();
+    rteRef.current?.editor?.commands.setContent('<p></p>');
+  };
+
+  const handleEditorUpdate = useCallback(() => {
+    const htmlContent = rteRef.current?.editor?.getHTML() || '';
+    const cleanHtml = htmlContent === '<p></p>' ? '' : htmlContent;
+    formik.setFieldValue('content', cleanHtml);
+    formik.setFieldTouched('content', true, false);
+  }, [formik]);
+
+  const handleEditClick = (article: Article) => {
+  setEditTarget(article);
+  formik.setValues({
+    title: article.title,
+    category: article.category,
+    article_status: article.article_status,
+    content: article.content,
+  });
+  rteRef.current?.editor?.commands.setContent(article.content || '<p></p>');
+  setOpenForm(true);
+};
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await backendlessApi.delete(`/Articles/${deleteTarget.objectId}`);
+      setSnackbar({ message: 'Artikel berhasil dihapus', severity: 'success' });
+      setDeleteTarget(null);
+      reloadArticles();
+    } catch (err) {
+      console.error('Detail error: ', err)
+      setSnackbar({ message: 'Gagal menghapus artikel', severity: 'error' });
+    }
+  };
+
+
+  const formatDate = (timestamp: number) => {
+    return new Date(timestamp).toLocaleDateString('id-ID', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  };
 
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
         <Typography sx={{ fontSize: 14, color: '#6B7280' }}>
-          {articles.length} artikel total
+          {articles ? articles.length : 0} artikel total
         </Typography>
         <Button
           variant="contained"
           startIcon={<AddOutlined />}
           onClick={() => setOpenForm(true)}
-          sx={{ bgcolor: 'secondary.main', '&:hover': { bgcolor: '#185FA5' }, py: 1, px: 2.5, color:'white' }}
+          sx={{ bgcolor: 'secondary.main', '&:hover': { bgcolor: '#185FA5' }, py: 1, px: 2.5, color: 'white' }}
         >
           Tambah Artikel
         </Button>
       </Box>
+
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }} onClose={reloadArticles}>
+          Gagal mengambil data dari server. Klik icon refresh atau coba lagi.
+        </Alert>
+      )}
 
       <Card sx={{ borderRadius: 3, boxShadow: '0 1px 3px rgba(0,0,0,0.06)' }}>
         <TableContainer>
           <Table>
             <TableHead>
               <TableRow sx={{ bgcolor: '#F9FAFB' }}>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: 12.5 }}>JUDUL</TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: 12.5 }}>KATEGORI</TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: 12.5 }}>STATUS</TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: 12.5 }}>TANGGAL</TableCell>
-                <TableCell sx={{ fontWeight: 600, color: '#6B7280', fontSize: 12.5 }} align="right">AKSI</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#6B7280', fontSize: 12.5 }}>NO</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#6B7280', fontSize: 12.5 }}>JUDUL</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#6B7280', fontSize: 12.5 }}>KATEGORI</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#6B7280', fontSize: 12.5 }}>STATUS</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#6B7280', fontSize: 12.5 }}>TANGGAL</TableCell>
+                <TableCell sx={{ fontWeight: 700, color: '#6B7280', fontSize: 12.5 }} align="right">AKSI</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {articles.length === 0 && (
+              {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={5} align="center" sx={{ py: 5, color: '#9CA3AF' }}>
+                  <TableCell colSpan={6} align="center" sx={{ py: 5 }}>
+                    <CircularProgress size={30} />
+                  </TableCell>
+                </TableRow>
+              ) : !articles || articles.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} align="center" sx={{ py: 5, color: '#9CA3AF' }}>
                     Belum ada artikel. Klik "Tambah Artikel" untuk membuat yang pertama.
                   </TableCell>
                 </TableRow>
+              ) : (
+                articles.map((a,i) => (
+                  <TableRow key={a.objectId} hover>
+                    <TableCell sx={{ fontSize: 14, fontWeight: 500, color: '#1F2937' }}>
+                      {i+1}
+                    </TableCell>
+                    <TableCell sx={{ fontSize: 14, fontWeight: 500, color: '#1F2937' }}>{a.title}</TableCell>
+                    <TableCell sx={{ fontSize: 14, color: '#6B7280' }}>{a.category}</TableCell>
+                    <TableCell>
+                      <Chip
+                        label={a.article_status}
+                        size="small"
+                        sx={{
+                          bgcolor: a.article_status === 'Published' ? '#DCFCE7' : '#FEF3C7',
+                          color: a.article_status === 'Published' ? '#16A34A' : '#B45309',
+                          fontWeight: 500, fontSize: 12,
+                        }}
+                      />
+                    </TableCell>
+                    <TableCell sx={{ fontSize: 14, color: '#6B7280' }}>{formatDate(a.created)}</TableCell>
+                    <TableCell align="right">
+                      <IconButton size="small" sx={{ color: '#9CA3AF' }} onClick={()=>handleEditClick(a)}>
+                        <EditOutlined fontSize="small" />
+                      </IconButton>
+                      <IconButton size="small" sx={{ color: '#DC2626' }} onClick={() => setDeleteTarget(a)}>
+                        <DeleteOutlineOutlined fontSize="small" />
+                      </IconButton>
+                    </TableCell>
+                  </TableRow>
+                ))
               )}
-              {articles.map((a) => (
-                <TableRow key={a.id} hover>
-                  <TableCell sx={{ fontSize: 14, fontWeight: 500, color: '#1F2937' }}>{a.title}</TableCell>
-                  <TableCell sx={{ fontSize: 14, color: '#6B7280' }}>{a.category}</TableCell>
-                  <TableCell>
-                    <Chip
-                      label={a.status}
-                      size="small"
-                      sx={{
-                        bgcolor: a.status === 'Published' ? '#DCFCE7' : '#FEF3C7',
-                        color: a.status === 'Published' ? '#16A34A' : '#B45309',
-                        fontWeight: 500, fontSize: 12,
-                      }}
-                    />
-                  </TableCell>
-                  <TableCell sx={{ fontSize: 14, color: '#6B7280' }}>{a.date}</TableCell>
-                  <TableCell align="right">
-                    <IconButton size="small" sx={{ color: '#9CA3AF' }}>
-                      <EditOutlined fontSize="small" />
-                    </IconButton>
-                    <IconButton size="small" sx={{ color: '#DC2626' }} onClick={() => setDeleteTarget(a)}>
-                      <DeleteOutlineOutlined fontSize="small" />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
             </TableBody>
           </Table>
         </TableContainer>
       </Card>
 
-      {/* Tambah artikel */}
-      <Dialog open={openForm} onClose={() => setOpenForm(false)} fullWidth maxWidth="md">
+      {/* Dialog Form Tambah Artikel */}
+      <Dialog open={openForm} onClose={() => !isSubmitting && handleCloseForm()} fullWidth maxWidth="md">
         <form onSubmit={formik.handleSubmit}>
-          <DialogTitle sx={{ fontWeight: 600 }}>Tambah Artikel</DialogTitle>
+          <DialogTitle sx={{ fontWeight: 600 }}>{editTarget ? 'Edit Artikel' : 'Tambah Artikel'}</DialogTitle>
           <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2.5, pt: 1 }}>
             <TextField
               fullWidth label="Judul" name="title"
+              disabled={isSubmitting}
               value={formik.values.title} onChange={formik.handleChange} onBlur={formik.handleBlur}
               error={formik.touched.title && Boolean(formik.errors.title)}
               helperText={formik.touched.title && formik.errors.title}
             />
             <TextField
               fullWidth select label="Kategori" name="category"
+              disabled={isSubmitting}
               value={formik.values.category} onChange={formik.handleChange} onBlur={formik.handleBlur}
               error={formik.touched.category && Boolean(formik.errors.category)}
               helperText={formik.touched.category && formik.errors.category}
@@ -191,75 +285,80 @@ export default function ArticlesPage() {
             </TextField>
             <TextField
               fullWidth select label="Status" name="status"
-              value={formik.values.status} onChange={formik.handleChange}
+              disabled={isSubmitting}
+              value={formik.values.article_status} onChange={formik.handleChange}
             >
               <MenuItem value="Draft">Draft</MenuItem>
               <MenuItem value="Published">Published</MenuItem>
             </TextField>
 
-            <RichTextEditor
-              ref={rteRef}
-              extensions={editorExtensions}
-              content="<p></p>"
-              renderControls={() => (
-                <MenuControlsContainer>
-                  <MenuSelectHeading />
-                  <MenuDivider />
-                  <MenuButtonBold />
-                  <MenuButtonItalic />
-                  <MenuButtonUnderline />
-                  <MenuButtonStrikethrough />
-                  <MenuDivider />
-                  <MenuButtonBulletedList />
-                  <MenuButtonOrderedList />
-                  <MenuButtonBlockquote />
-                  <MenuButtonCodeBlock />
-                  <MenuButtonHorizontalRule />
-                  <MenuDivider />
-                  {/* Link & gambar — penting untuk artikel blog */}
-                  <MenuButtonEditLink />
-                  <MenuButtonImageUpload
-                    onUploadFiles={(files) =>
-                      // TODO: ganti dengan upload ke storage/CDN Anda, lalu kembalikan URL-nya
-                      files.map((file) => ({
-                        src: URL.createObjectURL(file),
-                        alt: file.name,
-                      }))
-                    }
-                  />
-                  <MenuDivider />
-
-                  {/* Perataan teks */}
-                  <MenuButtonAlignLeft />
-                  <MenuButtonAlignCenter />
-                  <MenuButtonAlignRight />
-                  <MenuDivider />
-
-                  {/* Undo / redo */}
-                  <MenuButtonUndo />
-                  <MenuButtonRedo />
-                </MenuControlsContainer>
+            {/*Rich Text Editor */}
+            <Box>
+              <RichTextEditor
+                ref={rteRef}
+                extensions={editorExtensions}
+                content={formik.values.content || "<p></p>"}
+                onUpdate={handleEditorUpdate}
+                renderControls={() => (
+                  <MenuControlsContainer>
+                    <MenuSelectHeading />
+                    <MenuDivider />
+                    <MenuButtonBold />
+                    <MenuButtonItalic />
+                    <MenuButtonUnderline />
+                    <MenuButtonStrikethrough />
+                    <MenuDivider />
+                    <MenuButtonBulletedList />
+                    <MenuButtonOrderedList />
+                    <MenuButtonBlockquote />
+                    <MenuButtonCodeBlock />
+                    <MenuButtonHorizontalRule />
+                    <MenuDivider />
+                    <MenuButtonEditLink />
+                    <MenuButtonImageUpload
+                      onUploadFiles={(files) =>
+                        files.map((file) => ({
+                          src: URL.createObjectURL(file),
+                          alt: file.name,
+                        }))
+                      }
+                    />
+                    <MenuDivider />
+                    <MenuButtonAlignLeft />
+                    <MenuButtonAlignCenter />
+                    <MenuButtonAlignRight />
+                    <MenuDivider />
+                    <MenuButtonUndo />
+                    <MenuButtonRedo />
+                  </MenuControlsContainer>
+                )}
+              />
+              {formik.touched.content && formik.errors.content && (
+                <Typography color="error" variant="caption" sx={{ ml: 2, mt: 0.5, display: 'block' }}>
+                  {formik.errors.content}
+                </Typography>
               )}
-            />
+            </Box>
           </DialogContent>
           <DialogActions sx={{ px: 3, pb: 2.5 }}>
-            <Button onClick={() => setOpenForm(false)} sx={{ color: '#6B7280' }}>Batal</Button>
+            <Button onClick={handleCloseForm} disabled={isSubmitting}>Batal</Button>
             <Button
               type="submit" variant="contained"
-              sx={{ bgcolor: 'secondary.main', '&:hover': { bgcolor: '#185FA5' }, color:'white' }}
+              disabled={isSubmitting}
+              sx={{ bgcolor: 'secondary.main', '&:hover': { bgcolor: '#185FA5' }, color: 'white' }}
             >
-              Simpan
+              {isSubmitting ? 'Menyimpan...' : editTarget ? 'Perbarui' : 'Simpan'}
             </Button>
           </DialogActions>
         </form>
       </Dialog>
 
-      {/*Konfirmasi Hapus */}
+      {/* Konfirmasi Hapus */}
       <Dialog open={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} maxWidth="xs" fullWidth>
         <DialogTitle sx={{ fontWeight: 600 }}>Hapus Artikel?</DialogTitle>
         <DialogContent>
           <Typography sx={{ fontSize: 14, color: '#6B7280' }}>
-            Artikel "{deleteTarget?.title}" akan dihapus permanen dan tidak dapat dikembalikan.
+            Artikel "{deleteTarget?.title}" akan dihapus permanen dari server Backendless.
           </Typography>
         </DialogContent>
         <DialogActions sx={{ px: 3, pb: 2.5 }}>
@@ -269,7 +368,9 @@ export default function ArticlesPage() {
       </Dialog>
 
       <Snackbar open={Boolean(snackbar)} autoHideDuration={2500} onClose={() => setSnackbar(null)}>
-        <Alert severity="success" onClose={() => setSnackbar(null)}>{snackbar}</Alert>
+        <Alert severity={snackbar?.severity || 'success'} onClose={() => setSnackbar(null)}>
+          {snackbar?.message}
+        </Alert>
       </Snackbar>
     </Box>
   )
