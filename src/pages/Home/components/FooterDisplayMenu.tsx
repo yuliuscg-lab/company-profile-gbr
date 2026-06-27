@@ -8,9 +8,9 @@ type Props = {
 
 const FooterDisplayMenu = ({item}:Props) => {
     return (
-        <Box sx={{pt:4}}>
+        <Box sx={{pt:{xs:2,md:4}}}>
                         <Box sx={{display:'flex',flexDirection:'column', justifyContent:'flex-start'}}>
-                            <Box component='h5' sx={{fontWeight:'bold',mb:1, textTransform:'uppercase', }}>
+                            <Box component='h5' sx={{fontWeight:'bold',mb:1, textTransform:'uppercase', fontSize:'small' }}>
                                     {item.judul}
                             </Box>
                                 {

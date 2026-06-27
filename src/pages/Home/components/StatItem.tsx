@@ -11,10 +11,10 @@ const StatItem=({value, label, desc}:StatItemProps)=> {
         
         <Box sx={{display:'flex', flexDirection:'column'}}>
             <Box sx={{display:'flex'}}>
-                <Typography variant='h3' color='secondary' sx={{fontWeight:'bold', fontSize:36}}>{value}</Typography>
-                <Typography variant='h3' color='secondary' sx={{fontWeight:'bold', fontSize:36}}>{label}</Typography>
+                <Typography component='h3' color='secondary' sx={{fontWeight:'bold', fontSize:{xs:24,md:36}}}>{value}</Typography>
+                <Typography component='h3' color='secondary' sx={{fontWeight:'bold', fontSize:{xs:24,md:36}}}>{label}</Typography>
             </Box>
-            <Typography variant='h6' color='primary' sx={{fontSize:14, opacity:0.6}}>{desc}</Typography>
+            <Typography component='h6' color='primary' sx={{fontSize:{xs:16,md:14}, opacity:0.6}}>{desc}</Typography>
         </Box>
         
     )

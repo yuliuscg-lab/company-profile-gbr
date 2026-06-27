@@ -27,7 +27,7 @@ const footerMenu:IFooterMenu[]=[
     {
         judul:'Kontak',
         menus: [
-            {text:'Jl. ABC no. 8, Cimahi Selatan, Cimahi, Jawa Barat.', icon:<LocationOn color='secondary'/>},
+            {text:'Jl. ABC no. 8, Cimahi, Jawa Barat.', icon:<LocationOn color='secondary'/>},
             {text:'+62-8123-4567-890', icon:<WhatsApp color='secondary'/>},
             {text:'halo@gembira.co.id', icon:<Email color='secondary'/>}
         ]
@@ -36,29 +36,29 @@ const footerMenu:IFooterMenu[]=[
 
 const Footer = () => {
     return (
-        <Box component='section'>
+        <Box component='section' sx={{maxWidth:'100vw'}}>
             <Grid container spacing={2} sx={{mb:2}}>
                 <Grid size={4}>
-                    <Box component='img' src={GBRLogo} alt='logo gbr' sx={{width:'125px', mt:6, ml:8}}/>
-                    <Box sx={{display:'flex', pl:8}}>
+                    <Box component='img' src={GBRLogo} alt='logo gbr' sx={{width:{xs:'75px',md:'125px'}, mt:6, ml:{md:8,xs:2}}}/>
+                    <Box sx={{display:'flex', pl:{md:8, xs:0}, alignItems:'center'}}>
                         <IconButton aria-label='instagram'>
-                            <Instagram color='secondary'/>
+                            <Instagram fontSize="small" color='secondary'/>
                         </IconButton>
                         <IconButton>
-                            <YouTube color='secondary'/>
+                            <YouTube fontSize="small" color='secondary'/>
                         </IconButton>
                         <IconButton>
-                            <Facebook color='secondary'/>
+                            <Facebook fontSize="small" color='secondary'/>
                         </IconButton>
                     </Box>
                 </Grid>
-                <Grid size={2}>
+                <Grid size={2} sx={{display:{xs:'none',md:'block'}}}>
                     <FooterDisplayMenu item={footerMenu[0]}/>
                 </Grid>
-                <Grid size={2}>
+                <Grid size={2}sx={{display:{xs:'none',md:'block'}}}>
                     <FooterDisplayMenu item={footerMenu[1]}/>
                 </Grid>
-                <Grid size={4}>
+                <Grid size={{md:4,xs:8}} sx={{pr:{md:0,xs:1}}}>
                     <FooterDisplayMenu item={footerMenu[2]}/>
                 </Grid>
             </Grid>

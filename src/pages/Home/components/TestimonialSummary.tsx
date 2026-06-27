@@ -5,6 +5,7 @@ import ContentTitle from "../../../components/common/ContentTitle";
 import ContentSummary from "../../../components/common/ContentSummary";
 import TestimonialCard from "../../../components/common/TestimonialCard";
 import { type TTestimonial } from "../../../data/testimonial.data";
+import { useIsMobile } from "../../../hooks/useIsMobile";
 
 type Props = {
     testimoniData:TTestimonial;
@@ -12,17 +13,20 @@ type Props = {
 
 const TestimonialSummary = ({testimoniData}:Props) => {
     const contentData=HomeContentData[2];
+    const isMobile = useIsMobile();
+    const displayData = isMobile?testimoniData.slice(0,2):testimoniData;
     return (
-        <Box component='section' sx={{height:'auto',p:10}}>
-            <Box sx={{width:'50%'}}>
+        <Box component='section' sx={{height:'auto',p:{md:10, xs:4}}}>
+            <Box sx={{width:{md:'50%',xs:'100%'}}}>
                 <SummaryTitleTag title={contentData.title}/>
                 <ContentTitle text={contentData.text}/>
                 <ContentSummary summary={contentData.summary}/>
             </Box>
-            <Box sx={{display:'flex', gap:2, mt:2}}>
+            <Box sx={{display:'flex', flexDirection:'column' ,gap:2, mt:2}}>
                     {
-                    testimoniData.map((testimonial)=>(
-                        <TestimonialCard testimoni={testimonial}/>
+                    
+                    displayData.map((testimonial)=>(
+                        <TestimonialCard key={testimonial.id} testimoni={testimonial}/>
                     ))
                     }
                 </Box>
