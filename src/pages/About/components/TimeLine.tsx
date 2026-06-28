@@ -45,13 +45,14 @@ const timelineData: TimelineData[] = [
 export default function TimeLine() {
     return (
         <Box sx={{ bgcolor: '#transparent', py: 1, px: 2 }}>
-            <Timeline
+            <Timeline 
+                position='right'
                 sx={{
-                    [`& .${timelineItemClasses.root}:before`]: {
-                        flex: 0,
-                        padding: 0,
-                    },
-                }}
+                [`& .${timelineItemClasses.root}:before`]: {
+                flex: 0,
+                padding: 0,
+        },
+    }}
             >
                 {timelineData.map((item, index) => (
                     <TimelineItem key={item.year}>
