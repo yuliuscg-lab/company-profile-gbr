@@ -35,7 +35,7 @@ const useFetch = <T,>(
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [url]); // Efek hanya berjalan jika URL berubah, bukan setiap render config
 
-    return { data, isLoading, error, setError, refetch: fetchData };
+    return { data, isLoading, error, setError, refetch:fetchData };
 };
 
 export default useFetch;

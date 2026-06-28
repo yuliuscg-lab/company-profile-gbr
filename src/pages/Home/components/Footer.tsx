@@ -37,6 +37,7 @@ const footerMenu:IFooterMenu[]=[
 const Footer = () => {
     return (
         <Box component='section' sx={{maxWidth:'100vw'}}>
+            <Divider/>
             <Grid container spacing={2} sx={{mb:2}}>
                 <Grid size={4}>
                     <Box component='img' src={GBRLogo} alt='logo gbr' sx={{width:{xs:'75px',md:'125px'}, mt:6, ml:{md:8,xs:4}}}/>

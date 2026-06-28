@@ -46,11 +46,10 @@ export default function TimeLine() {
     return (
         <Box sx={{ bgcolor: '#transparent', py: 1, px: 2 }}>
             <Timeline 
-                position='right'
                 sx={{
-                [`& .${timelineItemClasses.root}:before`]: {
-                flex: 0,
-                padding: 0,
+                [`& .${timelineItemClasses.root}::before`]: {
+                flex: '0 !important',
+                padding: '0 !important',
         },
     }}
             >
@@ -65,7 +64,7 @@ export default function TimeLine() {
                                     boxShadow: 'none',
                                     width: 16,
                                     height: 16,
-                                    m: 0,
+                                    m: 1,
                                 }}
                             />
                             {index !== timelineData.length - 1 && (

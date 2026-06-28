@@ -4,8 +4,6 @@ import HeroImgMobile from "../../../assets/hero-image/hero-image-mobile.png"
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import StatItem from "./StatItem";
 import { useIsMobile } from "../../../hooks/useIsMobile";
-import { useIsSmallDesktop } from "../../../hooks/useIsSmallDesktop";
-import HeroImgLg from "../../../assets/hero-image/hero-image-lg.png"
 
 const stats = [
     {value:10, label:'+', desc:'Tahun Pengalaman'},
@@ -17,14 +15,13 @@ const stats = [
 const Hero = () => {
     
     const isMobile = useIsMobile();
-    const isSmallDesktop = useIsSmallDesktop();
     return (
         <Box component='section' sx={{position:'relative', height:'100vh'}}>
-            <Box component='img' src={isMobile?HeroImgMobile:isSmallDesktop?HeroImgLg:HeroImg} aria--label='hero image' 
+            <Box component='img' src={isMobile?HeroImgMobile:HeroImg} aria--label='hero image' 
                 sx={{width:'100%',
                     height:'100%',
                     display:'block',
-                    }}/>
+                    objectFit:'cover'}}/>
             <Box
                 sx={{
                     position: 'absolute',

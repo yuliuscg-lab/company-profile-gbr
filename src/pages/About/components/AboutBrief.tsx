@@ -10,7 +10,7 @@ const AboutBrief = () => {
             <Box sx={{width:'50%'}}>
                 <SummaryTitleTag title={"tentang kami"}/>
                 <ContentTitle text={"Diracik pemancing, untuk pemancing"}/>
-                <ContentSummary summary={"Tarikan bukan sekadar merek umpan. Kami adalah komunitas yang terobsesi menghadirkan sensasi strike terbaik di setiap lemparan."}/>
+                <ContentSummary summary={"Gembira bukan sekadar merek umpan. Kami adalah komunitas yang terobsesi menghadirkan sensasi strike terbaik di setiap lemparan."}/>
             </Box>  
         </Box>
 

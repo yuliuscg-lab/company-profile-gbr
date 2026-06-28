@@ -10,7 +10,7 @@ const FooterDisplayMenu = ({item}:Props) => {
     return (
         <Box sx={{pt:{xs:2,md:4}}}>
                         <Box sx={{display:'flex',flexDirection:'column', justifyContent:'flex-start'}}>
-                            <Box component='h5' sx={{fontWeight:'bold',mb:1, textTransform:'uppercase', fontSize:'small' }}>
+                            <Box component='h5' sx={{fontWeight:'bold',mb:1, textTransform:'uppercase', fontSize:18 }}>
                                     {item.judul}
                             </Box>
                                 {
@@ -25,7 +25,7 @@ const FooterDisplayMenu = ({item}:Props) => {
                                     disableRipple
                                     startIcon={leadingIcon} 
                                     sx={{display:'flex', 
-                                        fontSize:'12px', 
+                                        fontSize:'14px', 
                                         width:'fit-content',
                                         textTransform:'none',
                                         justifyContent:'flex-start',
