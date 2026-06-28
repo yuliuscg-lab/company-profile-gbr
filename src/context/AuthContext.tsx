@@ -19,6 +19,7 @@ interface IAuthContext {
 	) => void;
 	signOut: () => void;
 	isAuthenticating: boolean;
+	forcedLogout: ()=>void;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
@@ -68,7 +69,7 @@ const AuthProvider = ({ children }: Props) => {
 			persistUser(authUser);
 			console.log(authUser);
 			onSuccess?.();
-			nav(ROUTES.CMSDASHBOARD);
+			nav(ROUTES.CMSARTICLES);
 		} catch (error) {
 			onError?.();
 			console.error(error);
@@ -113,11 +114,19 @@ const AuthProvider = ({ children }: Props) => {
 		}
 	};
 
+	const forcedLogout = () => {
+		persistUser(null);
+		nav(ROUTES.CMS);
+	};
 	useEffect(() => {
 		// eslint-disable-next-line react-hooks/set-state-in-effect
 		checkAuth();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+
+		const handleFocus = () => checkAuth();
+		window.addEventListener('focus', handleFocus);
+		return () => window.removeEventListener('focus', handleFocus);
+		}, []);
 
 	return (
 		<AuthContext.Provider
@@ -126,6 +135,7 @@ const AuthProvider = ({ children }: Props) => {
 				signIn,
 				signOut,
 				isAuthenticating,
+				forcedLogout,
 			}}
 		>
 			{children}

@@ -32,8 +32,6 @@ const ProductSummary = ({ProductDatas}:Props) => {
                 ))}
                 </Box>
             }
-
-            
         </Box>
         
     )

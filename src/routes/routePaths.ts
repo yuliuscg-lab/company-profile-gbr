@@ -1,11 +1,10 @@
 export const ROUTES = {
     HOME: '/',
     ABOUT: '/about',
-    PRODUCTS: '/product',
-    ARTICLES: '/article',
+    PRODUCTS: '/products',
+    ARTICLES: '/articles',
     CMS: '/cms',
-    CMSDASHBOARD: '/cms/dashboard',
-    CMSARTICLES: '/cms/dashboard/articles',
-    CMSUSERS: '/cms/dashboard/users',
-    CMSANALYTICS: '/cms/dashboard/analytics',
+    CMSARTICLES: '/cms/articles',
+    CMSUSERS: '/cms/users',
+    CMSANALYTICS: '/cms/analytics',
 } as const;

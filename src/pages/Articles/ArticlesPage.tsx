@@ -4,7 +4,7 @@ import {
   TableHead, TableRow, IconButton, Chip, Dialog, DialogTitle, DialogContent,
   DialogActions, TextField, MenuItem, Snackbar, Alert, CircularProgress
 } from '@mui/material'
-import { AddOutlined, DeleteOutlineOutlined, EditOutlined } from '@mui/icons-material';
+import { AddOutlined, ArticleOutlined, DeleteOutlineOutlined, EditOutlined } from '@mui/icons-material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import {
@@ -178,9 +178,22 @@ export default function ArticlesPage() {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
-        <Typography sx={{ fontSize: 14, color: '#6B7280' }}>
-          {articles ? articles.length : 0} artikel total
-        </Typography>
+        <Card sx={{ p: 2.5, borderRadius: 3, boxShadow: '0 1px 3px rgba(0,0,0,0.06)', display:'flex', gap:2, alignItems:'center'}}>
+              
+              <Box
+                sx={{
+                  width: 44, height: 44, borderRadius: 2,
+                  bgcolor: `#185FA51A`, color: "#185FA5",
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                }}
+              >
+                <ArticleOutlined/>
+              </Box>
+              <Typography sx={{ fontSize: 24, fontWeight: 700, color: '#1F2937' }}>
+                  {articles ? articles.length : 0}
+                </Typography>
+                <Typography sx={{ fontSize: 13, color: '#6B7280' }}>Total Artikel</Typography>
+            </Card>
         <Button
           variant="contained"
           startIcon={<AddOutlined />}

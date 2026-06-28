@@ -9,7 +9,6 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../routes/routePaths'
 
 const menuItems = [
-  { label: 'Dashboard', icon: <DashboardOutlined />, path: ROUTES.CMSDASHBOARD, comingSoon: false },
   { label: 'Artikel', icon: <ArticleOutlined />, path: ROUTES.CMSARTICLES, comingSoon: false },
   { label: 'Kelola Pengguna', icon: <GroupOutlined />, path: ROUTES.CMSUSERS, comingSoon: true },
   { label: 'Analitik', icon: <BarChartOutlined />, path: ROUTES.CMSANALYTICS, comingSoon: true },
@@ -59,8 +58,7 @@ export default function Sidebar() {
           return (
             <ListItemButton
               key={item.path}
-              onClick={() => !item.comingSoon && navigate(item.path)}
-              disabled={item.comingSoon} 
+              onClick={() => navigate(item.path)}
               sx={{
                 borderRadius: 2,
                 mb: 0.5,
@@ -68,7 +66,7 @@ export default function Sidebar() {
                 bgcolor: isActive ? 'rgba(255,255,255,0.14)' : 'transparent',
                 borderLeft: isActive ? '3px solid #E6F1FB' : '3px solid transparent',
                 '&:hover': { bgcolor: 'rgba(255,255,255,0.10)' },
-                opacity: item.comingSoon ? 0.7 : 1, // Sedikit redup jika fitur belum rilis
+                opacity: item.comingSoon ? 0.7 : 1,
               }}
             >
               <ListItemIcon sx={{ color: isActive ? '#E6F1FB' : '#85B7EB', minWidth: 36 }}>

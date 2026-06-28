@@ -4,6 +4,8 @@ import HeroImgMobile from "../../../assets/hero-image/hero-image-mobile.png"
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import StatItem from "./StatItem";
 import { useIsMobile } from "../../../hooks/useIsMobile";
+import { useIsSmallDesktop } from "../../../hooks/useIsSmallDesktop";
+import HeroImgLg from "../../../assets/hero-image/hero-image-lg.png"
 
 const stats = [
     {value:10, label:'+', desc:'Tahun Pengalaman'},
@@ -15,9 +17,10 @@ const stats = [
 const Hero = () => {
     
     const isMobile = useIsMobile();
+    const isSmallDesktop = useIsSmallDesktop();
     return (
         <Box component='section' sx={{position:'relative', height:'100vh'}}>
-            <Box component='img' src={isMobile?HeroImgMobile:HeroImg} aria--label='hero image' 
+            <Box component='img' src={isMobile?HeroImgMobile:isSmallDesktop?HeroImgLg:HeroImg} aria--label='hero image' 
                 sx={{width:'100%',
                     height:'100%',
                     display:'block',
@@ -42,14 +45,25 @@ const Hero = () => {
                     pt: {xs:10,md:0}
                 }}
             >
-                <Typography component="h2" color='primary' sx={{fontWeight:'900', fontSize:{xs:'56px', md:'72px'}, lineHeight:1.2}}>SEKALI LEMPAR,</Typography>
-                <Typography component="h2" color='secondary'sx={{fontWeight:'900', fontSize:{xs:'56px', md:'72px'}, lineHeight:1.2}}>LANGSUNG STRIKE.</Typography>
+                <Typography component="h2" color='primary' sx={{fontWeight:'900', fontSize:{xs:'3rem', md:'72px'}, lineHeight:1.2}}>SEKALI LEMPAR,</Typography>
+                <Typography component="h2" color='secondary'sx={{fontWeight:'900', fontSize:{xs:'3rem', md:'72px'}, lineHeight:1.2}}>LANGSUNG STRIKE.</Typography>
                 <Typography component="h6" color='primary' sx={{opacity:0.6, width:{xs:'80%',md:'50%'},fontSize:{xs:'18px', md:'20px'}, lineHeight:1.3}}>Pelet pancing yang teruji di lapangan untuk ikan mas, nila, lele, tawes, mujair, dan patin. Aroma memikat, tekstur sempurna, hasil tak terbantahkan.</Typography>
                 <Box sx={{display:'flex', gap:2, mt:{xs:4,md:2}}}>
-                    <Button variant='contained' color='secondary' endIcon={<ArrowForwardIcon/>} size='large'>
+                    <Button variant='contained' color='secondary' endIcon={<ArrowForwardIcon/>} 
+                        sx={{
+                            py: { xs: 1, md: 1.5 },
+                            px: { xs: 2, md: 3 },
+                            fontSize: { xs: '0.7rem', md: '1rem' }
+                        }}>
                         Lihat Produk
                     </Button>
-                    <Button variant='outlined' color='primary' size='large' sx={{bgcolor:'white'}}>
+                    <Button variant='outlined' color='primary'
+                        sx={{
+                                bgcolor:'white',
+                                py: { xs: 1, md: 1.5 },
+                                px: { xs: 2, md: 3 },
+                                fontSize: { xs: '0.7rem', md: '1rem' }
+                            }}>
                         Kenali Kami
                     </Button>
                 </Box>

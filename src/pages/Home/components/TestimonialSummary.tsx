@@ -22,7 +22,7 @@ const TestimonialSummary = ({testimoniData}:Props) => {
                 <ContentTitle text={contentData.text}/>
                 <ContentSummary summary={contentData.summary}/>
             </Box>
-            <Box sx={{display:'flex', flexDirection:'column' ,gap:2, mt:2}}>
+            <Box sx={{display:'flex', flexWrap:'wrap' ,gap:2, mt:2}}>
                     {
                     
                     displayData.map((testimonial)=>(

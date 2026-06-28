@@ -20,7 +20,7 @@
             .required('Password wajib diisi'),
         }),
         onSubmit: (values) => {
-            console.log('submit dipanggil', values) // tambah ini
+            console.log('submit dipanggil', values)
             signIn(
             values.email,
             values.password,

@@ -39,8 +39,8 @@ const Footer = () => {
         <Box component='section' sx={{maxWidth:'100vw'}}>
             <Grid container spacing={2} sx={{mb:2}}>
                 <Grid size={4}>
-                    <Box component='img' src={GBRLogo} alt='logo gbr' sx={{width:{xs:'75px',md:'125px'}, mt:6, ml:{md:8,xs:2}}}/>
-                    <Box sx={{display:'flex', pl:{md:8, xs:0}, alignItems:'center'}}>
+                    <Box component='img' src={GBRLogo} alt='logo gbr' sx={{width:{xs:'75px',md:'125px'}, mt:6, ml:{md:8,xs:4}}}/>
+                    <Box sx={{display:'flex', pl:{md:8, xs:2}, alignItems:'center'}}>
                         <IconButton aria-label='instagram'>
                             <Instagram fontSize="small" color='secondary'/>
                         </IconButton>
@@ -58,7 +58,7 @@ const Footer = () => {
                 <Grid size={2}sx={{display:{xs:'none',md:'block'}}}>
                     <FooterDisplayMenu item={footerMenu[1]}/>
                 </Grid>
-                <Grid size={{md:4,xs:8}} sx={{pr:{md:0,xs:1}}}>
+                <Grid size={{md:4,xs:8}} sx={{px:{md:0,xs:2}}}>
                     <FooterDisplayMenu item={footerMenu[2]}/>
                 </Grid>
             </Grid>
@@ -67,7 +67,7 @@ const Footer = () => {
                 <Typography sx={{fontSize:'14px'}}>
                     <Copyright sx={{fontSize:'small'}} /> 2026 Gembira. Semua hak dilindungi.
                 </Typography>
-                <Typography sx={{fontSize:'14px'}}>
+                <Typography sx={{fontSize:'14px', display:{xs:'none', md:'block'}}}>
                     Diproduksi dengan bangga di Indonesia.
                 </Typography>
             </Box>

@@ -8,7 +8,6 @@ import { ROUTES } from '../../../routes/routePaths';
 import LogoGBR from '../../../assets/logo-gembira/logo-gbr.png';
 
 const titleMap: Record<string, string> = {
-  [ROUTES.CMSDASHBOARD]: 'Dashboard',
   [ROUTES.CMSARTICLES]: 'Artikel',
   [ROUTES.CMSUSERS]: 'Kelola Pengguna',
   [ROUTES.CMSANALYTICS]: 'Analitik',
@@ -19,7 +18,7 @@ export default function DashboardLayout() {
   const { user, signOut } = useAuth()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const pageTitle = titleMap[location.pathname] ?? 'Dashboard'
+  const pageTitle = titleMap[location.pathname] ?? 'Artikel'
   const userEmail = user?.email || ''
 
   return (
