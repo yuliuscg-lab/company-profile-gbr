@@ -20,7 +20,7 @@ const Hero = () => {
     const isMobile = useIsMobile();
     return (
         <Box component='section' sx={{position:'relative', height:'100vh'}}>
-            <Box component='img' src={isMobile?HeroImgMobile:HeroImg} aria--label='hero image' 
+            <Box component='img' src={isMobile?HeroImgMobile:HeroImg} aria-label='hero image' 
                 sx={{width:'100%',
                     height:'100%',
                     display:'block',

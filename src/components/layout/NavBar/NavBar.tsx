@@ -25,7 +25,7 @@ const NavBar=()=> {
                         {/*Menu Desktop*/}
                         <IconButton sx={{display:{xs:'block',md:'none', color:'black'}}} onClick={()=>setIsOpen(!isOpen)}>
                             {
-                                isOpen? <Close fontSize='large'/>:<Menu fontSize="large"/>
+                                isOpen? <Close aria-label="Close menu" fontSize='large'/>:<Menu aria-label="Open menu" fontSize="large"/>
                             }
                         </IconButton>
                         <Box component="nav" sx={{ display:{xs:'none',md:'block'}, gap: 2 }}>
