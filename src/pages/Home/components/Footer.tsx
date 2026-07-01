@@ -50,10 +50,10 @@ const Footer = () => {
                         <IconButton aria-label='instagram' href='https://www.instagram.com' target='_blank'>
                             <Instagram fontSize="small" color='secondary'/>
                         </IconButton>
-                        <IconButton href='https://www.youtube.com' target='_blank'>
+                        <IconButton aria-label='youtube' href='https://www.youtube.com' target='_blank'>
                             <YouTube fontSize="small" color='secondary'/>
                         </IconButton>
-                        <IconButton href='https://www.facebook.com' target='_blank'>
+                        <IconButton aria-label='facebook' href='https://www.facebook.com' target='_blank'>
                             <Facebook fontSize="small" color='secondary'/>
                         </IconButton>
                     </Box>
