@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate, Outlet } from "react-router-dom"
 import NavBar from "../components/layout/NavBar/NavBar"
 import Home from "../pages/Home/Home"
-import { ROUTES } from "./routePaths"
+import { CMS_PATHS, ROUTES } from "./routePaths"
 import ArticlesPage from "../pages/Articles/ArticlesPage"
 import UsersPage from "../pages/Users/UsersPage"
 import AnalyticsPage from "../pages/Analytics/AnalyticsPage"
@@ -38,7 +38,7 @@ const AppRoutes = () => {
 
             <Route path={ROUTES.CMS} element={<CmsEntry />}>
                 <Route element={<DashboardLayout />}>
-                    <Route index element={<Navigate to={ROUTES.CMSARTICLES} replace />} />
+                    <Route index element={<Navigate to={CMS_PATHS.ARTICLES} replace />} />
                     <Route path={ROUTES.CMSARTICLES} element={<ArticlesPage />} />
                     <Route path={ROUTES.CMSUSERS} element={<UsersPage />} />
                     <Route path={ROUTES.CMSANALYTICS} element={<AnalyticsPage />} />

@@ -22,7 +22,7 @@ const ArticleCard = ({article}:Props) => {
     const navigate=useNavigate();
 
     return (
-        <Card sx={{ maxWidth: 345, borderRadius:8,}}>
+        <Card sx={{ maxWidth: 320, borderRadius:8,}}>
             <CardActionArea
                 onClick={()=> navigate(`/articles/${article.objectId}`)} 
                 sx={{
@@ -40,16 +40,16 @@ const ArticleCard = ({article}:Props) => {
                 alt="article"
                 />
                 <CardContent sx={{px:3}}>
-                <Box sx={{display:'flex', gap: 2, alignItems:'center', py:1}}>
-                    <Typography sx={{fontWeight:"bold",color:"text.secondary",fontSize:20}}>
+                <Box sx={{display:'flex', gap: 1, alignItems:'center', py:1}}>
+                    <Typography sx={{fontWeight:"bold",color:"text.secondary",fontSize:16}}>
                         {article.category}  
                     </Typography>
                     &bull;
-                    <Typography sx={{fontSize:18, opacity:0.7}}>
+                    <Typography sx={{fontSize:16, opacity:0.7}}>
                         {article.reading_time} menit baca
                     </Typography>
                 </Box>
-                <Typography gutterBottom sx={{fontSize:24, fontWeight:'bold'}}>
+                <Typography gutterBottom sx={{fontSize:20, fontWeight:'bold'}}>
                     {article.title}
                 </Typography>
                 <Box sx={{display:'flex', flexDirection:'column',justifyContent:'space-evenly'}}>
