@@ -1,12 +1,15 @@
 import { Box, Card, CardContent, CardMedia, Divider, IconButton, Typography } from "@mui/material";
 import {type IProduct} from "../../data/product.data";
 import { ArrowOutward } from "@mui/icons-material";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../routes/routePaths";
 
 type Props = {
     product:IProduct;
 }
 
 const ProductCard = ({product}:Props) => {
+    const navigate = useNavigate();
     return (
         <Card sx={{ maxWidth: 304, margin: 'auto', boxShadow: '0 0 20px 0 rgba(0,0,0,0.12)', transition: '0.3s', borderRadius:'16px' }}>
             <CardMedia
@@ -41,7 +44,7 @@ const ProductCard = ({product}:Props) => {
                         </Box>
                     </Box>
 
-                    <IconButton aria-label='lihat detail' color="secondary" sx={{border:1}}>
+                    <IconButton aria-label='lihat detail' color="secondary" sx={{border:1}} onClick={()=>navigate(ROUTES.PRODUCTS)}>
                         <ArrowOutward/>
                     </IconButton>
                 </Box>

@@ -34,7 +34,7 @@ const TestimonialData:ITestimonial[] = [
     {
         id:4,
         nama:'Agus Salim',
-        role:'Pemancing Profesional',
+        role:'Pemancing Pro',
         asal:'Lampung',
         testimoni:'Laut Pro tahan banget kena arus. Umpan lain hancur, ini masih utuh. Kakap merah ukuran jumbo berhasil naik. Mantap!'
     }

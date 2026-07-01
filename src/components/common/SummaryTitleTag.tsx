@@ -16,14 +16,15 @@ const SummaryTitleTag = ({title}:Props) => {
             px: 2,               
             py: 0.5,            
             display: 'inline-flex',
-            fontSize: '0.85rem',
+            fontSize: {xs:'0.8rem',md:'0.85rem'},
             alignItems: 'center',
             justifyContent:'center',
             gap:'4px',
             borderColor:'#0d47a1',
             border:1,
             mb:2,
-            textTransform:'uppercase'
+            textTransform:'uppercase',
+            whiteSpace:'nowrap'
             }}>
             <Square sx={{fontSize:'small'}}/>
             {title}

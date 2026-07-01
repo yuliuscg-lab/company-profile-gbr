@@ -6,7 +6,7 @@ type Props = {
 
 const ContentTitle = ({text}:Props) => {
     return (
-        <Typography variant='h3' sx={{fontWeight:'bold', textTransform:'uppercase', mb:1, fontSize:46}}>
+        <Typography variant='h3' sx={{fontWeight:900, textTransform:'uppercase', mb:1, fontSize:{xs:40,md:46}}}>
             {text}
         </Typography>
     )

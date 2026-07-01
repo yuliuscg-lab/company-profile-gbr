@@ -10,7 +10,7 @@ type Props = {
 const StrengthCard = ({icon:Icon, strength, desc}:Props) => {
     return(
         <Box>
-            <Card variant='outlined'sx={{border:2, borderColor:'#1976D2', borderRadius:'16px'}}>
+            <Card variant='outlined'sx={{border:2, borderColor:'#1976D2', borderRadius:'16px', height:{md:'155px', xs:'190px'}}}>
                 <CardContent>
                     <Icon color='secondary'/>
                     <Typography color='secondary' sx={{textTransform:'uppercase', fontWeight:'bold'}}>{strength}</Typography>
