@@ -130,7 +130,7 @@ const getExcerpt = (htmlContent: string|undefined|null) => {
                     <Typography variant="h5" sx={{ fontWeight: 'bold', mt:{md:1,xs:0}, textTransform:'uppercase', fontSize:{lg:36,md:26,xs:20}, mb:{lg:2,md:1,xs:0}}}>
                         {chosenArticle.title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" sx={{ my: {md:4,xs:1}, fontSize:{lg:18,md:16,xs:15} }}>
+                    <Typography variant="body2" color="text.secondary" sx={{ my: {md:2,xs:1}, fontSize:{lg:18,md:16,xs:15} }}>
                         {getExcerpt(chosenArticle.content)}
                     </Typography>
                     <Box sx={{display:'flex', gap:2, alignItems:'center'}}>
@@ -152,7 +152,7 @@ const getExcerpt = (htmlContent: string|undefined|null) => {
                         variant='text'
                         disableRipple
                         sx={{
-                            my:{lg:4,md:2,xs:0},
+                            my:{lg:2,md:2,xs:0},
                             color:'text.secondary', 
                             fontWeight:'bold', 
                             textTransform:'none', 
@@ -167,7 +167,7 @@ const getExcerpt = (htmlContent: string|undefined|null) => {
 
         <Box sx={{mt:8}}>
             <SummaryTitleTag title="Semua Artikel"/>
-            <Box sx={{display:'flex',gap:4,flexWrap:'wrap', justifyContent:{md:'flex-start',xs:'center'},}}>
+            <Box sx={{display:'flex',gap:2,flexWrap:'wrap', justifyContent:{md:'flex-start',xs:'center'},}}>
                 {
                 articles.map((data)=>(
                     <ArticleCard key={data.objectId} article={data}/>
