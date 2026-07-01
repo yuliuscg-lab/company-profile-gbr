@@ -1,22 +1,19 @@
 import { Box, List, ListItemButton, ListItemIcon, ListItemText, Typography, Chip } from '@mui/material'
 import {
   DashboardOutlined,
-  ArticleOutlined,
-  GroupOutlined,
-  BarChartOutlined,
 } from '@mui/icons-material'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { ROUTES } from '../../routes/routePaths'
+import SidebarMenuItem from '../../data/cms-sidebar-menu.data'
+import UserAvatar from '../layout/Dashboard/UserAvatar'
 
-const menuItems = [
-  { label: 'Artikel', icon: <ArticleOutlined />, path: ROUTES.CMSARTICLES, comingSoon: false },
-  { label: 'Kelola Pengguna', icon: <GroupOutlined />, path: ROUTES.CMSUSERS, comingSoon: true },
-  { label: 'Analitik', icon: <BarChartOutlined />, path: ROUTES.CMSANALYTICS, comingSoon: true },
-]
+type Props = {
+  isMobilee:boolean
+}
 
-export default function Sidebar() {
+export default function Sidebar({ isMobilee }: Props) {
   const navigate = useNavigate()
   const location = useLocation()
+
 
   return (
     <Box
@@ -32,7 +29,11 @@ export default function Sidebar() {
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5, px: 3, py: 3 }}>
-        <Box
+        
+        <Box sx={{display:'flex', flexDirection:'column', gap:0.2}}>
+          
+        <Box sx={{display:'flex', gap:1, mb:2}}>
+          <Box
           sx={{
             width: 42, height: 42, bgcolor: '#185FA5',
             borderRadius: 2, display: 'flex',
@@ -49,10 +50,20 @@ export default function Sidebar() {
             Content Management
           </Typography>
         </Box>
+        </Box>
+        {
+          isMobilee && (
+            <Box sx={{ mt: 1, mb: 2 }}>
+              <UserAvatar isMobile={true} />
+            </Box>
+          )
+        }
+        </Box>
       </Box>
 
       <List sx={{ px: 2, mt: 1, flex: 1 }}>
-        {menuItems.map((item) => {
+        {
+        SidebarMenuItem.map((item) => {
           const isActive = location.pathname === item.path
           
           return (
@@ -70,7 +81,7 @@ export default function Sidebar() {
               }}
             >
               <ListItemIcon sx={{ color: isActive ? '#E6F1FB' : '#85B7EB', minWidth: 36 }}>
-                {item.icon}
+                <item.icon />
               </ListItemIcon>
               <ListItemText
                 primary={item.label}

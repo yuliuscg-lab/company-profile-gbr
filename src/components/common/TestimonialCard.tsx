@@ -1,5 +1,5 @@
-import { ArrowOutward, Star } from "@mui/icons-material";
-import { Card, CardContent, Typography, Divider, Box, IconButton} from "@mui/material";
+import { Star } from "@mui/icons-material";
+import { Card, CardContent, Typography, Divider, Box} from "@mui/material";
 import type { ITestimonial } from "../../data/testimonial.data";
 import QuoteImg from '../../assets/quote.png';
 
@@ -43,10 +43,6 @@ const TestimonialCard = ({testimoni}:Props) => {
                             {testimoni.role}, {testimoni.asal}
                         </Box>
                     </Box>
-
-                    <IconButton aria-label='lihat detail' color="secondary" sx={{border:1}}>
-                        <ArrowOutward/>
-                    </IconButton>
                 </Box>
             </CardContent>
         </Card>

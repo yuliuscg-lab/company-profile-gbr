@@ -5,5 +5,4 @@ export default interface IArticlesData {
     category:string,
 }
 
-
 export type TArticlesData=IArticlesData[];

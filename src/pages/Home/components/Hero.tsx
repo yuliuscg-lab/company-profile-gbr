@@ -4,6 +4,8 @@ import HeroImgMobile from "../../../assets/hero-image/hero-image-mobile.png"
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import StatItem from "./StatItem";
 import { useIsMobile } from "../../../hooks/useIsMobile";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../../../routes/routePaths";
 
 const stats = [
     {value:10, label:'+', desc:'Tahun Pengalaman'},
@@ -13,6 +15,7 @@ const stats = [
 ];
 
 const Hero = () => {
+    const navigate = useNavigate();
     
     const isMobile = useIsMobile();
     return (
@@ -46,7 +49,11 @@ const Hero = () => {
                 <Typography component="h2" color='secondary'sx={{fontWeight:'900', fontSize:{xs:'3rem', md:'72px'}, lineHeight:1.2}}>LANGSUNG STRIKE.</Typography>
                 <Typography component="h6" color='primary' sx={{opacity:0.6, width:{xs:'80%',md:'50%'},fontSize:{xs:'18px', md:'20px'}, lineHeight:1.3}}>Pelet pancing yang teruji di lapangan untuk ikan mas, nila, lele, tawes, mujair, dan patin. Aroma memikat, tekstur sempurna, hasil tak terbantahkan.</Typography>
                 <Box sx={{display:'flex', gap:2, mt:{xs:4,md:2}}}>
-                    <Button variant='contained' color='secondary' endIcon={<ArrowForwardIcon/>} 
+                    <Button
+                        onClick={() => navigate(ROUTES.PRODUCTS)}
+                        variant='contained' 
+                        color='secondary'
+                        endIcon={<ArrowForwardIcon/>} 
                         sx={{
                             py: { xs: 1, md: 1.5 },
                             px: { xs: 2, md: 3 },
@@ -54,7 +61,10 @@ const Hero = () => {
                         }}>
                         Lihat Produk
                     </Button>
-                    <Button variant='outlined' color='primary'
+                    <Button 
+                        onClick={() => navigate(ROUTES.ABOUT)}
+                        variant='outlined' 
+                        color='primary'
                         sx={{
                                 bgcolor:'white',
                                 py: { xs: 1, md: 1.5 },

@@ -10,7 +10,7 @@ const CultureCard = ({data}:Props) => {
     const Icon = data.icon;
     return (
         <Box>
-            <Card variant='outlined'sx={{border:2, borderColor:'#1976D2', borderRadius:'16px', height:{md:'155px', xs:'240px'}, bgcolor:'#ebf3ff'}}>
+            <Card variant='outlined'sx={{border:2, borderColor:'#1976D2', borderRadius:'16px', height:{md:'155px', xs:'150px'}, bgcolor:'#ebf3ff'}}>
                 <CardContent>
                     <Icon color='secondary'/>
                     <Typography color='secondary' sx={{textTransform:'uppercase', fontWeight:'bold'}}>{data.title}</Typography>

@@ -87,15 +87,15 @@
                     },}}
                 />
 
-            <Box sx={{ textAlign: 'right', mt: 1, mb: 2.5 }}>
+            {/* <Box sx={{ textAlign: 'right', mt: 1, mb: 2.5 }}>
                 <Link href="#" variant="body2" underline="hover">Lupa password?</Link>
-            </Box>
+            </Box> */}
 
             <Button
                 fullWidth type="submit" variant="contained" size="large"
                 disabled={isAuthenticating}
                 startIcon={isAuthenticating ? <CircularProgress size={16} color="inherit" /> : <Login />}
-                sx={{ bgcolor: 'secondary.main', '&:hover': { bgcolor: '#185FA5' }, py: 1.3, color:'white'}}
+                sx={{ bgcolor: 'secondary.main', '&:hover': { bgcolor: '#185FA5' }, py: 1.3, color:'white', mt:2.5}}
             >
                 {isAuthenticating ? 'Memproses...' : 'Masuk'}
             </Button>

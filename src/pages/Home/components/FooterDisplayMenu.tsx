@@ -1,5 +1,6 @@
 import { Box, Button} from "@mui/material";
 import { type TFooterMenu} from './Footer';
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     item:TFooterMenu;
@@ -7,6 +8,7 @@ type Props = {
 
 
 const FooterDisplayMenu = ({item}:Props) => {
+    const navigate = useNavigate();
     return (
         <Box sx={{pt:{xs:2,md:4}}}>
                         <Box sx={{display:'flex',flexDirection:'column', justifyContent:'flex-start'}}>
@@ -19,7 +21,16 @@ const FooterDisplayMenu = ({item}:Props) => {
                                     const labelText = isObject?menu.text:menu;
                                     const leadingIcon = isObject?menu.icon:undefined;
                                 return (
-                                    <Button 
+                                    <Button
+                                    onClick={()=> {
+                                        const targetPath = item.path[menuIndex];
+
+                                        if (targetPath.startsWith('http') || targetPath.startsWith('mailto:')) {
+                                            window.open(targetPath, '_blank', 'noopener,noreferrer');
+                                        } else {
+                                            navigate(targetPath);
+                                        }
+                                    }} 
                                     key={menuIndex} 
                                     variant='text'
                                     disableRipple

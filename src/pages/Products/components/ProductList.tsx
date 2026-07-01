@@ -6,6 +6,7 @@ import ContentSummary from "../../../components/common/ContentSummary";
 import { CheckCircle, WhatsApp } from "@mui/icons-material";
 
 const ProductList = () => {
+    
     return (
         <Box component='section' sx={{height:'auto', p:{xs:4,md:10}, bgcolor:'#ebf3ff'}}>
             {
@@ -59,7 +60,12 @@ const ProductList = () => {
                                         </Typography>
                                     </Box>
                                     <CardActions>
-                                        <Button variant="contained" endIcon={<WhatsApp/>} size='large' sx={{bgcolor:'secondary.main', color:'white'}}>
+                                        <Button
+                                            href={'https://wa.me/send?phone=6281234567890&text=Halo%20Purwadhika%20Fishing%20Bait,%20saya%20ingin%20memesan%20produk%20'+product.productName}
+                                            target='_blank'
+                                            variant="contained" 
+                                            endIcon={<WhatsApp/>} 
+                                            sx={{bgcolor:'secondary.main', color:'white'}}>
                                             Pesan Sekarang
                                         </Button>
                                     </CardActions>

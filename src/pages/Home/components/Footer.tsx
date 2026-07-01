@@ -2,10 +2,12 @@ import { Box, Divider, Grid, IconButton, Typography } from "@mui/material";
 import FooterDisplayMenu from "./FooterDisplayMenu";
 import GBRLogo from "../../../assets/logo-gembira/logo-gbr.png"
 import { Copyright, Email, Facebook, Instagram, LocationOn, WhatsApp, YouTube } from "@mui/icons-material";
+import { ROUTES } from "../../../routes/routePaths";
 
 interface IFooterMenu {
     judul:string,
     menus: (string[] | IMenuObject[])
+    path:string[]
 }
 export type TFooterMenu=IFooterMenu;
 
@@ -17,20 +19,23 @@ export type TMenuObject=IMenuObject;
 
 const footerMenu:IFooterMenu[]=[
     {
-        judul:'Navigasi',
-        menus: ['Beranda', 'Tentang Kami', 'Produk', 'Tim', 'Artikel']
+        judul: 'Navigasi',
+        menus: ['Beranda', 'Tentang Kami', 'Produk', 'Artikel'],
+        path: [ROUTES.HOME, ROUTES.ABOUT, ROUTES.PRODUCTS, ROUTES.ARTICLES]
     },
     {
-        judul:'Produk',
-        menus: ['Mas Juara', 'Nila Strike', 'Lele Monster', 'Laut Pro']
+        judul: 'Produk',
+        menus: ['Mas Juara', 'Nila Strike', 'Lele Monster', 'Laut Pro'],
+        path: [ROUTES.PRODUCTS, ROUTES.PRODUCTS, ROUTES.PRODUCTS, ROUTES.PRODUCTS]
     },
     {
-        judul:'Kontak',
+        judul: 'Kontak',
         menus: [
-            {text:'Jl. ABC no. 8, Cimahi, Jawa Barat.', icon:<LocationOn color='secondary'/>},
-            {text:'+62-8123-4567-890', icon:<WhatsApp color='secondary'/>},
-            {text:'halo@gembira.co.id', icon:<Email color='secondary'/>}
-        ]
+            { text: 'Jl. ABC no. 8, Cimahi, Jawa Barat.', icon: <LocationOn color='secondary' /> },
+            { text: '+62-8123-4567-890', icon: <WhatsApp color='secondary' /> },
+            { text: 'halo@gembira.co.id', icon: <Email color='secondary' /> }
+        ],
+        path: ['https://maps.app.goo.gl/sth1jGBipNufNHaQ7', 'https://wa.me/6281234567890', 'mailto:halo@gembira.co.id']
     },
 ]
 
@@ -42,13 +47,13 @@ const Footer = () => {
                 <Grid size={4}>
                     <Box component='img' src={GBRLogo} alt='logo gbr' sx={{width:{xs:'75px',md:'125px'}, mt:6, ml:{md:8,xs:4}}}/>
                     <Box sx={{display:'flex', pl:{md:8, xs:2}, alignItems:'center'}}>
-                        <IconButton aria-label='instagram'>
+                        <IconButton aria-label='instagram' href='https://www.instagram.com' target='_blank'>
                             <Instagram fontSize="small" color='secondary'/>
                         </IconButton>
-                        <IconButton>
+                        <IconButton href='https://www.youtube.com' target='_blank'>
                             <YouTube fontSize="small" color='secondary'/>
                         </IconButton>
-                        <IconButton>
+                        <IconButton href='https://www.facebook.com' target='_blank'>
                             <Facebook fontSize="small" color='secondary'/>
                         </IconButton>
                     </Box>

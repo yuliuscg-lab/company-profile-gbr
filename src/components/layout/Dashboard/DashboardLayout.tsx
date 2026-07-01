@@ -1,11 +1,12 @@
-import { Box, Typography, Avatar, Menu, MenuItem} from '@mui/material';
-import { LogoutOutlined, KeyboardArrowDown } from '@mui/icons-material';
+import { Box, Typography, IconButton, Drawer} from '@mui/material';
+import { Close, MenuOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Sidebar from '../../common/Sidebar';
-import { useAuth } from '../../../context/AuthContext';
 import { ROUTES } from '../../../routes/routePaths';
 import LogoGBR from '../../../assets/logo-gembira/logo-gbr.png';
+import UserAvatar from './UserAvatar';
+import { useIsMobile } from '../../../hooks/useIsMobile';
 
 const titleMap: Record<string, string> = {
   [ROUTES.CMSARTICLES]: 'Artikel',
@@ -15,15 +16,17 @@ const titleMap: Record<string, string> = {
 
 export default function DashboardLayout() {
   const location = useLocation()
-  const { user, signOut } = useAuth()
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const pageTitle = titleMap[location.pathname] ?? 'Artikel'
-  const userEmail = user?.email || ''
+
+  const isMobile = useIsMobile();
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: '#F4F7FB' }}>
-      <Sidebar />
+      <Box sx={{display:isMobile?'none':'block'}}>
+        <Sidebar isMobilee={false}/>
+      </Box>
+      
 
       <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
         <Box
@@ -46,30 +49,19 @@ export default function DashboardLayout() {
               {pageTitle}
             </Typography>
           </Box>
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', gap: 1, cursor: 'pointer' }}
-            onClick={(e) => setAnchorEl(e.currentTarget)}
-          >
-            <Avatar sx={{ width: 36, height: 36, bgcolor: '#185FA5', fontSize: 14 }}>
-              {userEmail.charAt(0).toUpperCase()}
-            </Avatar>
-            <Typography sx={{ fontSize: 14, fontWeight: 500, color: '#374151' }}>
-              {userEmail}
-            </Typography>
-            <KeyboardArrowDown sx={{ fontSize: 18, color: '#9CA3AF' }} />
-          </Box>
+          <UserAvatar isMobile={false}/>
+          <IconButton sx={{display:isMobile?'block':'none',':hover': { bgcolor: 'transparent' }}} disableRipple onClick={()=>setIsOpen(!isOpen)}>
+            {
+              isOpen? <Close fontSize='medium'/>:<MenuOutlined fontSize="medium"/>
+            }
+          </IconButton>
+          <Drawer
+          anchor="right" open={isOpen && isMobile} onClose={()=>setIsOpen(!isOpen)} sx={{width:275,  '& .MuiDrawer-paper': {
+            width: 275}}}>
+              
+            <Sidebar isMobilee={true}/>
 
-          <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
-            <MenuItem 
-              onClick={() => {
-                setAnchorEl(null)
-                signOut()
-              }} 
-              sx={{ gap: 1, color: '#DC2626' }}
-            >
-              <LogoutOutlined fontSize="small" /> Keluar
-            </MenuItem>
-          </Menu>
+        </Drawer>
         </Box>
 
         <Box sx={{ flex: 1, p: 4 }}>

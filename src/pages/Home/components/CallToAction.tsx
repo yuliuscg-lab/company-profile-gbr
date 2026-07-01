@@ -14,7 +14,13 @@ const CallToAction = () => {
                         Pesan umpan Gembira sekarang dan buktikan sensasi strike tiada henti di spot favoritmu.
                     </Typography>                
                 </Box>
-                <Button variant='contained' sx={{maxHeight:'3em',p:2, bgcolor:'white', color:'text.secondary', fontWeight:'bold'}} endIcon={<LocalMall/>}> 
+                <Button 
+                    onClick={()=> window.open('https://wa.me/6281234567890', '_blank', 'noopener,noreferrer')}
+                    variant='contained' 
+                    sx={{maxHeight:'3em',p:2, 
+                    bgcolor:'white', color:'text.secondary', 
+                    fontWeight:'bold'}} 
+                    endIcon={<LocalMall/>}> 
                     Pesan Sekarang
                 </Button>
             </Box>            

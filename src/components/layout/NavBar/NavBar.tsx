@@ -22,12 +22,12 @@ const NavBar=()=> {
                         aria-label="MyBrand Logo"
                         sx={{ height: 40, width: 'auto', mx:2}}/>
                     <Typography variant="h6" color='primary' sx={{ flexGrow: 1, fontWeight:900, lineHeight:'1.4em',letterSpacing:-0.025}}>GEMBIRA</Typography>
+                        {/*Menu Desktop*/}
                         <IconButton sx={{display:{xs:'block',md:'none', color:'black'}}} onClick={()=>setIsOpen(!isOpen)}>
                             {
                                 isOpen? <Close fontSize='large'/>:<Menu fontSize="large"/>
                             }
                         </IconButton>
-                        {/*Menu Desktop*/}
                         <Box component="nav" sx={{ display:{xs:'none',md:'block'}, gap: 2 }}>
                             {
                                 navItems.map((item)=>{

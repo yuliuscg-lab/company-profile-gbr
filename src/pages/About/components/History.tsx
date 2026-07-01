@@ -9,7 +9,7 @@ const History = () => {
     return (
         <Box component='section' sx={{height:'auto', p:{xs:4,md:10}, bgcolor:'#ebf3ff'}}>
             <Box sx={{display:'flex', gap: 4, alignItems:'center'}}>
-                <Box sx={{width:{md:'45%'}}}>
+                <Box sx={{width:{md:'45%'}, display:{xs:'none',md:'block'}}}>
                     <Box component='img' src={HistoryImg} sx={{width:'100%', height:'auto', borderRadius:'16px'}}/>
                 </Box>
                 <Box sx={{width:{md:'55%'}}}>

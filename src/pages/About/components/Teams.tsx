@@ -1,4 +1,4 @@
-import { Avatar, Box, Card, CardContent, Typography } from "@mui/material";
+import { Avatar, Box, Card, CardContent, Skeleton, Typography } from "@mui/material";
 import useFetch from "../../../hooks/useFetch";
 import SummaryTitleTag from "../../../components/common/SummaryTitleTag";
 import ContentTitle from "../../../components/common/ContentTitle";
@@ -48,7 +48,41 @@ const Teams = () => {
         'https://randomuser.me/api/?results=4'
     )
 
-    if(isLoading) return <p>Loading ... </p>
+    if (isLoading) {
+        return (
+            <Box component="section" sx={{ height: 'auto', p: { xs: 4, md: 10 }, bgcolor: '#ebf3ff' }}>
+                {/* Skeleton untuk Bagian Judul */}
+                <Box sx={{ mb: 4 }}>
+                    <Skeleton variant="text" width={150} height={30} sx={{ mb: 1 }} />
+                    <Skeleton variant="text" width="40%" height={50} sx={{ mb: 2 }} />
+                    <Skeleton variant="text" width="80%" height={24} />
+                    <Skeleton variant="text" width="60%" height={24} />
+                </Box>
+
+                {/* Skeleton untuk List Kartu Tim (Tiruan 4 Kartu) */}
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+                    {Array.from(new Array(4)).map((_, index) => (
+                        <Card key={index} sx={{ width: 600, p: 2, display: 'flex', borderRadius: '16px', bgcolor: 'white', gap: 2, border: 2, borderColor: 'secondary.main' }}>
+                            {/* Avatar Skeleton */}
+                            <Skeleton variant="circular" width={80} height={80} animation="wave" />
+                            
+                            <CardContent sx={{ p: 0, flex: 1 }}>
+                                <Box sx={{ mb: 1 }}>
+                                    {/* Nama Skeleton */}
+                                    <Skeleton variant="text" width="60%" height={28} animation="wave" />
+                                    {/* Role Skeleton */}
+                                    <Skeleton variant="text" width="40%" height={24} animation="wave" />
+                                </Box>
+                                {/* Bio Skeleton */}
+                                <Skeleton variant="text" width="100%" height={20} animation="wave" />
+                                <Skeleton variant="text" width="85%" height={20} animation="wave" />
+                            </CardContent>
+                        </Card>
+                    ))}
+                </Box>
+            </Box>
+        );
+    }
     if(error) return <p>Error:{error.message}</p>
     if(!data) return null;
 

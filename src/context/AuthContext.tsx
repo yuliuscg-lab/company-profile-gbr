@@ -3,6 +3,7 @@ import {
 	createContext,
 	useContext,
 	useEffect,
+	useRef,
 	useState,
 	type ReactNode,
 } from "react";
@@ -41,6 +42,12 @@ const AuthProvider = ({ children }: Props) => {
 		}
 	});
 	const [isAuthenticating, setIsAuthenticating] = useState<boolean>(true);
+	
+	const userRef = useRef<Backendless.User | null>(null);
+
+	useEffect(() => {
+		userRef.current = user;
+	}, [user]);
 
 	const nav = useNavigate();
 
@@ -104,11 +111,19 @@ const AuthProvider = ({ children }: Props) => {
 			if (isValid) {
 				await refreshUser();
 			} else {
-				persistUser(null);
+				if(userRef.current) {
+					forcedLogout();
+				} else {
+					persistUser(null);
+				}
 			}
 		} catch (error) {
 			console.error("Failed to check auth:", error);
-			persistUser(null);
+			if (userRef.current) {
+				forcedLogout();
+			} else {
+				persistUser(null);
+			}
 		} finally {
 			setIsAuthenticating(false);
 		}
@@ -125,7 +140,15 @@ const AuthProvider = ({ children }: Props) => {
 
 		const handleFocus = () => checkAuth();
 		window.addEventListener('focus', handleFocus);
-		return () => window.removeEventListener('focus', handleFocus);
+
+		const IntervalId = setInterval(() => {
+			checkAuth();
+		}, 60*1000);
+
+		return () => {
+			window.removeEventListener('focus', handleFocus);
+			clearInterval(IntervalId);
+		} 
 		}, []);
 
 	return (

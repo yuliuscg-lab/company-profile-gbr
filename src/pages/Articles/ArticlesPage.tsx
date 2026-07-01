@@ -39,6 +39,7 @@ import Placeholder from '@tiptap/extension-placeholder'
 import backendlessApi from '../../config/axios.config';
 import { useAuth } from '../../context/AuthContext';
 import useFetch from '../../hooks/useFetch';
+import { formatDate } from '../../utils/formatDate';
 
 const editorExtensions = [
   StarterKit,
@@ -49,32 +50,33 @@ const editorExtensions = [
   Placeholder.configure({ placeholder: 'Tulis isi artikel di sini...' }),
 ]
 
-type Article = {
+export type IArticles = {
   objectId: string;
   title: string
   category: string
+  reading_time:number
+  img_url:string
   article_status: 'Draft' | 'Published'
   content: string
-  created: number
+  published_at: number
 }
 
 export default function ArticlesPage() {
   const [openForm, setOpenForm] = useState(false);
-  const [deleteTarget, setDeleteTarget] = useState<Article | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<IArticles | null>(null);
   const [snackbar, setSnackbar] = useState<{ message: string; severity: 'success' | 'error' } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [editTarget, setEditTarget] = useState<Article|null>(null);
+  const [editTarget, setEditTarget] = useState<IArticles|null>(null);
 
   const {user} = useAuth();
   const rteRef = useRef<RichTextEditorRef>(null);
 
-  // 1. Integrasi useFetch langsung untuk entitas /Articles
   const {
     data: articles,
     isLoading,
     error,
     refetch: reloadArticles,
-  } = useFetch<Article[]>(
+  } = useFetch<IArticles[]>(
     "/Articles",
     {
       params: {
@@ -85,33 +87,38 @@ export default function ArticlesPage() {
     backendlessApi,
   );
 
-  // 2. Formik Setup dengan penanganan ekstrak konten dari Rich Text Editor
   const formik = useFormik({
-    initialValues: { title: '', category: '', article_status: 'Draft', content: '' },
+    initialValues: { title: '', category: '', img_url:'' ,article_status: 'Draft', content: '',published_at:0,reading_time:0 },
     validationSchema: Yup.object({
       title: Yup.string().min(5, 'Judul minimal 5 karakter').required('Judul wajib diisi'),
       category: Yup.string().required('Kategori wajib diisi'),
+      img_url: Yup.string().required('Masukan direct URL gambar!'),
       article_status: Yup.string().required(),
       content: Yup.string().min(20, 'Konten minimal 20 karakter').required('Konten wajib diisi'),
+      reading_time: Yup.number().min(1, 'Waktu baca minimal 1 menit').required('Waktu baca wajib diisi'),
     }),
 
     onSubmit: async (values) => {
+      setIsSubmitting(true);
       try {
-        setIsSubmitting(true);
+          const payload: Record<string, unknown> = { ...values };
+
+          const wasPublished = editTarget?.article_status === 'Published';
+          const isNowPublished = values.article_status === 'Published';
+
+          if (isNowPublished && !wasPublished) {
+            // eslint-disable-next-line react-hooks/purity
+            payload.published_at = Date.now();
+          }
+
         if (editTarget) {
           await backendlessApi.put(`/Articles/${editTarget.objectId}`, {
-            title: values.title,
-            category: values.category,
-            status: values.article_status,
-            content: values.content,
+            ...payload
           });
           setSnackbar({ message: 'Artikel berhasil diperbarui', severity: 'success' });
         } else {
           await backendlessApi.post('/Articles', {
-            title: values.title,
-            category: values.category,
-            status: values.article_status,
-            content: values.content,
+            ...payload,
             ownerId: user?.objectId,
           });
           setSnackbar({ message: 'Artikel berhasil ditambahkan', severity: 'success' });
@@ -141,13 +148,16 @@ export default function ArticlesPage() {
     formik.setFieldTouched('content', true, false);
   }, [formik]);
 
-  const handleEditClick = (article: Article) => {
+  const handleEditClick = (article: IArticles) => {
   setEditTarget(article);
   formik.setValues({
     title: article.title,
     category: article.category,
+    img_url:article.img_url,
     article_status: article.article_status,
     content: article.content,
+    published_at: article.published_at,
+    reading_time: article.reading_time || 0
   });
   rteRef.current?.editor?.commands.setContent(article.content || '<p></p>');
   setOpenForm(true);
@@ -167,13 +177,7 @@ export default function ArticlesPage() {
   };
 
 
-  const formatDate = (timestamp: number) => {
-    return new Date(timestamp).toLocaleDateString('id-ID', {
-      day: '2-digit',
-      month: 'short',
-      year: 'numeric'
-    });
-  };
+
 
   return (
     <Box>
@@ -255,7 +259,7 @@ export default function ArticlesPage() {
                         }}
                       />
                     </TableCell>
-                    <TableCell sx={{ fontSize: 14, color: '#6B7280' }}>{formatDate(a.created)}</TableCell>
+                    <TableCell sx={{ fontSize: 14, color: '#6B7280' }}>{formatDate(a.published_at)}</TableCell>
                     <TableCell align="right">
                       <IconButton size="small" sx={{ color: '#9CA3AF' }} onClick={()=>handleEditClick(a)}>
                         <EditOutlined fontSize="small" />
@@ -292,12 +296,27 @@ export default function ArticlesPage() {
               helperText={formik.touched.category && formik.errors.category}
             >
               <MenuItem value="Tips">Tips</MenuItem>
-              <MenuItem value="Internal">Internal</MenuItem>
+              <MenuItem value="Cerita">Cerita</MenuItem>
               <MenuItem value="Produk">Produk</MenuItem>
               <MenuItem value="Berita">Berita</MenuItem>
             </TextField>
             <TextField
-              fullWidth select label="Status" name="status"
+              fullWidth label="Gambar Utama Artikel" name="img_url"
+              disabled={isSubmitting}
+              value={formik.values.img_url} onChange={formik.handleChange} onBlur={formik.handleBlur}
+              error={formik.touched.img_url && Boolean(formik.errors.img_url)}
+              helperText={formik.touched.img_url && formik.errors.img_url}
+            />
+            <TextField
+              fullWidth label="Waktu Baca" name="reading_time"
+              type="number"
+              disabled={isSubmitting}
+              value={formik.values.reading_time} onChange={formik.handleChange} onBlur={formik.handleBlur}
+              error={formik.touched.reading_time && Boolean(formik.errors.reading_time)}
+              helperText={formik.touched.reading_time && formik.errors.reading_time}
+            />
+            <TextField
+              fullWidth select label="Status" name="article_status"
               disabled={isSubmitting}
               value={formik.values.article_status} onChange={formik.handleChange}
             >

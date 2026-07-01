@@ -44,7 +44,7 @@ const Culture = () => {
             <SummaryTitleTag title={'Budaya kami'}/>
             <ContentTitle text={'nilai yang kami pegang erat'}/>
             <ContentSummary summary={'Empat prinsip ini menjadi kompas setiap orang di Tarikan, dari meja riset hingga lini produksi.'}/>
-            <Box sx={{display:'flex', gap:4, my:5}}>
+            <Box sx={{display:'flex', gap:4, my:5, flexDirection:{xs:'column',md:'row'}}}>
                 {
                 valueCards.map((data)=>(
                     <CultureCard data={data} />

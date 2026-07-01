@@ -10,6 +10,9 @@ import About from "../pages/About/About"
 import CmsEntry from "./CMSEntry"
 import ScrollToTop from "./ScrollToTop"
 import Products from "../pages/Products/Products"
+import ArticlesMain from '../pages/ArticlesMain/ArticlesMain'
+import ArticleDetails from "../pages/ArticleDetails/ArticleDetails"
+
 
 const PublicLayout = () => (
     <>
@@ -29,14 +32,16 @@ const AppRoutes = () => {
                 <Route path={ROUTES.HOME} element={<Home/>} />
                 <Route path={ROUTES.ABOUT} element={<About/>}/>
                 <Route path={ROUTES.PRODUCTS} element={<Products/>}/>
+                <Route path={ROUTES.ARTICLES} element={<ArticlesMain/>}/>
+                <Route path={ROUTES.ARTICLE_READ} element={<ArticleDetails/>}/>
             </Route>
 
             <Route path={ROUTES.CMS} element={<CmsEntry />}>
                 <Route element={<DashboardLayout />}>
                     <Route index element={<Navigate to={ROUTES.CMSARTICLES} replace />} />
-                    <Route path="articles" element={<ArticlesPage />} />
-                    <Route path="users" element={<UsersPage />} />
-                    <Route path="analytics" element={<AnalyticsPage />} />
+                    <Route path={ROUTES.CMSARTICLES} element={<ArticlesPage />} />
+                    <Route path={ROUTES.CMSUSERS} element={<UsersPage />} />
+                    <Route path={ROUTES.CMSANALYTICS} element={<AnalyticsPage />} />
                 </Route>
             </Route>
         </Routes>
@@ -44,4 +49,4 @@ const AppRoutes = () => {
     )   
 }
 
-export default AppRoutes
+export default AppRoutes;
